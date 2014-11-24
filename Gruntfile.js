@@ -2,8 +2,7 @@ var exec = require("child_process").exec,
     distFiles = [
       "lib/vttcue.js",
       "lib/vttregion.js",
-      "lib/vtt.js",
-      "node_modules/text-encoding/lib/encoding.js"
+      "lib/vtt.js"
     ],
     banner = "/* <%= pkg.name %> - v<%= pkg.version %> (<%= pkg.homepage %>) " +
              "built on <%= grunt.template.today('dd-mm-yyyy') %> */\n"

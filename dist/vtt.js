@@ -1,4 +1,4 @@
-/* vtt.js - v0.11.11 (https://github.com/mozilla/vtt.js) built on 24-11-2014 */
+/* vtt.js - v0.11.11 (https://github.com/mozilla/vtt.js) built on 12-12-2014 */
 
 /**
  * Copyright 2013 vtt.js Contributors
@@ -19,23 +19,33 @@
 (function(root) {
 
   var autoKeyword = "auto";
-  var directionSetting = [ "", "lr", "rl" ];
-  var alignSetting = [ "start", "middle", "end", "left", "right" ];
+  var directionSetting = {
+    "": true,
+    "lr": true,
+    "rl": true
+  };
+  var alignSetting = {
+    "start": true,
+    "middle": true,
+    "end": true,
+    "left": true,
+    "right": true
+  };
 
   function findDirectionSetting(value) {
     if (typeof value !== "string") {
       return false;
     }
-    var index = directionSetting.indexOf(value.toLowerCase());
-    return index === -1 ? false : directionSetting[index];
+    var dir = directionSetting[value.toLowerCase()];
+    return dir ? value.toLowerCase() : false;
   }
 
   function findAlignSetting(value) {
     if (typeof value !== "string") {
       return false;
     }
-    var index = alignSetting.indexOf(value.toLowerCase());
-    return index === -1 ? false : alignSetting[index];
+    var align = alignSetting[value.toLowerCase()];
+    return align ? value.toLowerCase() : false;
   }
 
   function VTTCue(startTime, endTime, text) {
@@ -302,14 +312,17 @@
 
 (function(root) {
 
-  var scrollSetting = [ "", "up" ];
+  var scrollSetting = {
+    "": true,
+    "up": true,
+  };
 
   function findScrollSetting(value) {
     if (typeof value !== "string") {
       return false;
     }
-    var index = scrollSetting.indexOf(value.toLowerCase());
-    return index === -1 ? false : scrollSetting[index];
+    var scroll = scrollSetting[value.toLowerCase()];
+    return scroll ? value.toLowerCase() : false;
   }
 
   function isValidPercentValue(value) {
@@ -1584,9 +1597,9 @@
 
     // We don't need to recompute the cues' display states. Just reuse them.
     if (!shouldCompute(cues)) {
-      cues.forEach(function(cue) {
-        paddedOverlay.appendChild(cue.displayState);
-      });
+      for (var i = 0; i < cues.length; i++) {
+        paddedOverlay.appendChild(cues[i].displayState);
+      }
       return;
     }
 
@@ -1597,20 +1610,26 @@
       font: fontSize + "px " + FONT_STYLE
     };
 
-    cues.forEach(function(cue) {
-      // Compute the intial position and styles of the cue div.
-      var styleBox = new CueStyleBox(window, cue, styleOptions);
-      paddedOverlay.appendChild(styleBox.div);
+    (function() {
+      var styleBox, cue;
 
-      // Move the cue div to it's correct line position.
-      moveBoxToLinePosition(window, styleBox, containerBox, boxPositions);
+      for (var i = 0; i < cues.length; i++) {
+        cue = cues[i];
 
-      // Remember the computed div so that we don't have to recompute it later
-      // if we don't have too.
-      cue.displayState = styleBox.div;
+        // Compute the intial position and styles of the cue div.
+        styleBox = new CueStyleBox(window, cue, styleOptions);
+        paddedOverlay.appendChild(styleBox.div);
 
-      boxPositions.push(BoxPosition.getSimpleBoxPosition(styleBox));
-    });
+        // Move the cue div to it's correct line position.
+        moveBoxToLinePosition(window, styleBox, containerBox, boxPositions);
+
+        // Remember the computed div so that we don't have to recompute it later
+        // if we don't have too.
+        cue.displayState = styleBox.div;
+
+        boxPositions.push(BoxPosition.getSimpleBoxPosition(styleBox));
+      }
+    })();
   };
 
   WebVTT.Parser = function(window, decoder) {

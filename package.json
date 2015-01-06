@@ -28,7 +28,7 @@
   },
   "main": "lib/index.js",
   "files": [
-    "disti/"
+    "dist/",
     "lib/index.js",
     "lib/vtt.js",
     "lib/vttcue.js",

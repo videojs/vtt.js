@@ -1,4 +1,4 @@
-/* vtt.js - v0.11.11 (https://github.com/mozilla/vtt.js) built on 19-06-2014 */
+/* vtt.js - v0.11.11 (https://github.com/mozilla/vtt.js) built on 16-03-2015 */
 
 /**
  * Copyright 2013 vtt.js Contributors
@@ -133,7 +133,7 @@
         set: function(value) {
           _region = value;
           this.hasBeenReset = true;
-        },
+        }
       },
       "vertical": {
         enumerable: true,
@@ -148,7 +148,7 @@
           }
           _vertical = setting;
           this.hasBeenReset = true;
-        },
+        }
       },
       "snapToLines": {
         enumerable: true,
@@ -1173,7 +1173,7 @@
     if (cue.vertical === "") {
       this.applyStyles({
         left:  this.formatStyle(textPos, "%"),
-        width: this.formatStyle(cue.size, "%"),
+        width: this.formatStyle(cue.size, "%")
       });
     // Vertical box orientation; textPos is the distance from the top edge of the
     // area to the top edge of the box and cue.size is the height extending
@@ -1192,7 +1192,7 @@
         left: this.formatStyle(box.left, "px"),
         right: this.formatStyle(box.right, "px"),
         height: this.formatStyle(box.height, "px"),
-        width: this.formatStyle(box.width, "px"),
+        width: this.formatStyle(box.width, "px")
       });
     };
   }
@@ -2540,9 +2540,9 @@ if (typeof module !== "undefined" && module.exports) {
   var name_to_encoding = {};
   var label_to_encoding = {};
   encodings.forEach(function(category) {
-    category.encodings.forEach(function(encoding) {
-      name_to_encoding[encoding.name] = encoding;
-      encoding.labels.forEach(function(label) {
+    category['encodings'].forEach(function(encoding) {
+      name_to_encoding[encoding['name']] = encoding;
+      encoding['labels'].forEach(function(label) {
         label_to_encoding[label] = encoding;
       });
     });
@@ -2759,9 +2759,12 @@ if (typeof module !== "undefined" && module.exports) {
     options = Object(options);
     /** @private */
     this._encoding = getEncoding(opt_encoding);
-    if (this._encoding === null || (this._encoding.name !== 'utf-8' &&
-                                    this._encoding.name !== 'utf-16le' &&
-                                    this._encoding.name !== 'utf-16be'))
+
+    var allowLegacyEncoding = options.NONSTANDARD_allowLegacyEncoding;
+    var isLegacyEncoding = (this._encoding.name !== 'utf-8' &&
+                            this._encoding.name !== 'utf-16le' &&
+                            this._encoding.name !== 'utf-16be');
+    if (this._encoding === null || (isLegacyEncoding && !allowLegacyEncoding))
       throw new TypeError('Unknown encoding: ' + opt_encoding);
 
     if (!this._encoding.getEncoder)
@@ -3021,10 +3024,10 @@ if (typeof module !== "undefined" && module.exports) {
     if (!('encoding-indexes' in global))
       return;
     encodings.forEach(function(category) {
-      if (category.heading !== 'Legacy single-byte encodings')
+      if (category['heading'] !== 'Legacy single-byte encodings')
         return;
-      category.encodings.forEach(function(encoding) {
-        var idx = index(encoding.name);
+      category['encodings'].forEach(function(encoding) {
+        var idx = index(encoding['name']);
         /** @param {{fatal: boolean}} options */
         encoding.getDecoder = function(options) {
           return new SingleByteDecoder(idx, options);
@@ -4159,7 +4162,66 @@ if (typeof module !== "undefined" && module.exports) {
   };
 
   // 14.5 x-user-defined
-  // TODO: Implement this encoding.
+
+  /**
+   * @constructor
+   * @param {{fatal: boolean}} options
+   */
+  function XUserDefinedDecoder(options) {
+    var fatal = options.fatal;
+    /**
+     * @param {ByteInputStream} byte_pointer The byte stream to decode.
+     * @return {?number} The next code point decoded, or null if not enough
+     *     data exists in the input stream to decode a complete code point.
+     */
+    this.decode = function(byte_pointer) {
+      var bite = byte_pointer.get();
+      if (bite === EOF_byte) {
+        return EOF_code_point;
+      }
+      byte_pointer.offset(1);
+      if (inRange(bite, 0x00, 0x7F)) {
+        return bite;
+      }
+      return 0xF780 + bite - 0x80;
+    };
+  }
+
+  /**
+   * @constructor
+   * @param {{fatal: boolean}} options
+   */
+  function XUserDefinedEncoder(index, options) {
+    var fatal = options.fatal;
+    /**
+     * @param {ByteOutputStream} output_byte_stream Output byte stream.
+     * @param {CodePointInputStream} code_point_pointer Input stream.
+     * @return {number} The last byte emitted.
+     */
+    this.encode = function(output_byte_stream, code_point_pointer) {
+      var code_point = code_point_pointer.get();
+      if (code_point === EOF_code_point) {
+        return EOF_byte;
+      }
+      code_point_pointer.offset(1);
+      if (inRange(code_point, 0x0000, 0x007F)) {
+        return output_byte_stream.emit(code_point);
+      }
+      if (inRange(code_point, 0xF780, 0xF7FF)) {
+        return output_byte_stream.emit(code_point - 0xF780 + 0x80);
+      }
+      encoderError(code_point);
+    };
+  }
+
+  /** @param {{fatal: boolean}} options */
+  name_to_encoding['x-user-defined'].getEncoder = function(options) {
+    return new XUserDefinedEncoder(false, options);
+  };
+  /** @param {{fatal: boolean}} options */
+  name_to_encoding['x-user-defined'].getDecoder = function(options) {
+    return new XUserDefinedDecoder(false, options);
+  };
 
   // NOTE: currently unused
   /**

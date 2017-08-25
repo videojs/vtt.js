@@ -64,10 +64,10 @@
     "prepublish": "npm run build",
     "build": "npm run rollup-all",
     "rollup-all": "npm run rollup && npm run rollup-minify",
-    "rollup": "babel-node build/rollup.js",
-    "rollup-minify": "babel-node build/rollup.js --minify",
-    "rollup-dev": "babel-node build/rollup.js --watch",
-    "test": "./node_modules/.bin/grunt"
+    "rollup": "babel-node rollup.js",
+    "rollup-minify": "babel-node rollup.js --minify",
+    "rollup-dev": "babel-node rollup.js --watch",
+    "test": "grunt"
   },
   "license": {
     "type": "Apache-2.0",

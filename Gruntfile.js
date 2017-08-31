@@ -26,7 +26,7 @@ module.exports = function( grunt ) {
         browser: true,
         node: true
       },
-      files: [ "lib/*", "tests/**/*.js" ]
+      files: [ "lib/*", "tests/**/*.js", "!lib/browser-index.js" ]
     },
 
     uglify: {

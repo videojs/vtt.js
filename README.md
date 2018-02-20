@@ -1,6 +1,8 @@
 vtt.js
 ======
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/videojs/vtt.js.svg)](https://greenkeeper.io/)
+
 [comment]: # ([![Build Status](https://travis-ci.org/mozilla/vtt.js.svg?branch=master)](https://travis-ci.org/mozilla/vtt.js) [![npm-version](http://img.shields.io/npm/v/vtt.js.svg)](https://www.npmjs.org/package/vtt.js) [![Dependency Status](https://david-dm.org/mozilla/vtt.js.svg?theme=shields.io)](https://david-dm.org/mozilla/vtt.js) [![devDependency Status](https://david-dm.org/mozilla/vtt.js/dev-status.svg?theme=shields.io)](https://david-dm.org/mozilla/vtt.js#info=devDependencies))
 
 Implementation of the [WebVTT](https://developer.mozilla.org/en-US/docs/HTML/WebVTT) spec in JavaScript. Can be used

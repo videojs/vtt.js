@@ -1,6 +1,6 @@
 # videojs-vtt.js
 
-[![Build Status](https://travis-ci.org/videojs/vtt.js.svg?branch=master)](https://travis-ci.org/videojs/vtt.js) [![npm-version](http://img.shields.io/npm/v/videojs-vtt.js.svg)](https://www.npmjs.org/package/videojs-vtt.js) [![Dependency Status](https://david-dm.org/videojs/vtt.js.svg?theme=shields.io)](https://david-dm.org/videojs/vtt.js) [![devDependency Status](https://david-dm.org/videojs/vtt.js/dev-status.svg?theme=shields.io)](https://david-dm.org/videojs/vtt.js#info=devDependencies)
+[![npm-version](http://img.shields.io/npm/v/videojs-vtt.js.svg)](https://www.npmjs.org/package/videojs-vtt.js) [![Dependency Status](https://david-dm.org/videojs/vtt.js.svg?theme=shields.io)](https://david-dm.org/videojs/vtt.js) [![devDependency Status](https://david-dm.org/videojs/vtt.js/dev-status.svg?theme=shields.io)](https://david-dm.org/videojs/vtt.js#info=devDependencies)
 
 Implementation of the [WebVTT](https://developer.mozilla.org/en-US/docs/HTML/WebVTT) spec in JavaScript.
 

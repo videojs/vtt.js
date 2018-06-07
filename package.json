@@ -4,7 +4,7 @@
     "Gary Katsevman <me@gkatsev.com>"
   ],
   "name": "videojs-vtt.js",
-  "description": "A JavaScript implementation of the WebVTT specification, forked from vtt.js for use with video.js",
+  "description": "A JavaScript implementation of the WebVTT specification, forked from vtt.js for use with Video.js",
   "version": "0.14.1",
   "main": "lib/browser-index.js",
   "repository": {

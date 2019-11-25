@@ -29,53 +29,18 @@ module.exports = function( grunt ) {
       files: [ "lib/*", "tests/**/*.js" ]
     },
 
-    uglify: {
-      options: {
-        banner: banner
-      },
-      dist: {
-        files: {
-          "dist/vtt.min.js": "dist/vtt.js"
-        }
-      },
-      global: {
-        files: {
-          "dist/vtt.global.min.js": "dist/vtt.global.js"
-        }
-      },
-      dev: {
-        files: {
-          "dev_build/vtt.min.js": distFiles
-        }
-      }
-    },
-
-    concat: {
-      options: {
-        banner: banner + "\n"
-      },
-      dist: {
-        src: distFiles,
-        dest: "dist/vtt.js"
-      },
-      dev: {
-        src: distFiles,
-        dest: "dev_build/vtt.js"
-      }
-    },
-
     bump: {
       options: {
         files: [ "package.json", "bower.json" ],
         updateConfigs: [],
         commit: true,
         commitMessage: "Release v%VERSION%",
-        commitFiles: [ "package.json", "bower.json", "dist/*" ],
+        commitFiles: [ "package.json", "bower.json", distFiles ],
         createTag: true,
         tagName: "v%VERSION%",
         tagMessage: "Version %VERSION%",
         push: true,
-        pushTo: "git@github.com:mozilla/vtt.js.git",
+        pushTo: "git@github.com:videojs/vtt.js.git",
       }
     },
 
@@ -102,25 +67,18 @@ module.exports = function( grunt ) {
   }
 
   grunt.loadNpmTasks( "grunt-contrib-jshint" );
-  grunt.loadNpmTasks( "grunt-contrib-uglify" );
-  grunt.loadNpmTasks( "grunt-contrib-concat" );
   grunt.loadNpmTasks( "grunt-bump" );
   grunt.loadNpmTasks( "grunt-mocha-test" );
 
-  grunt.registerTask( "build", [ "uglify:dist", "concat:dist" ] );
-  grunt.registerTask( "dev-build", [ "uglify:dev", "concat:dev" ])
-  grunt.registerTask( "default", [ "jshint", "dev-build", "mochaTest" ]);
-
-  grunt.registerTask( "stage-dist", "Stage dist files.", function() {
-    execCmd( "git add dist/*", this.async() );
-  });
+  grunt.registerTask( "test", [ "mochaTest" ]);
+  grunt.registerTask( "default", [ "jshint", "mochaTest" ]);
 
   grunt.registerTask( "reload-pkg", "Reload the package.json config.", function() {
     grunt.config( "pkg", grunt.file.readJSON( "package.json" ) );
   });
 
   grunt.registerTask( "release", "Build the distributables and bump the version.", function(arg) {
-    grunt.task.run( "bump-only:" + arg, "reload-pkg", "build", "stage-dist", "bump-commit" );
+    grunt.task.run( "bump-only:" + arg, "reload-pkg", "bump-commit" );
   });
 
   grunt.registerTask( "cue2json", "Run cue2json.", function(path, opts) {

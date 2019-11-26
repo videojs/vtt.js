@@ -57,7 +57,8 @@
     "build-global": "browserify -s vttjs -p deumdify  . -o dist/vtt.global.js",
     "postbuild": "npm run minify",
     "minify": "grunt uglify:dist uglify:global",
-    "test": "grunt"
+    "test": "grunt",
+    "prepublishOnly": "npm run build"
   },
   "license": "Apache-2.0",
   "dependencies": {

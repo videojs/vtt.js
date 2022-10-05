@@ -176,16 +176,17 @@ nodes attached to a top level div.
 var div = WebVTT.convertCueToDOMTree(window, cuetext);
 ```
 
-## WebVTT.processCues(window, cues, overlay)
+## WebVTT.processCues(window, cues, overlay, regions)
 
 Converts the cuetext of the cues passed to it to DOM trees&mdash;by calling convertCueToDOMTree&mdash;and
 then runs the processing model steps of the WebVTT specification on the divs. The processing model applies the necessary
 CSS styles to the cue divs to prepare them for display on the web page. During this process the cue divs get added
 to a block level element (overlay). The overlay should be a part of the live DOM as the algorithm will use the
 computed styles (only of the divs to do overlap avoidance.
+Regions list should be supplied based on what was emitted with `onregion`.
 
 ```javascript
-var divs = WebVTT.processCues(window, cues, overlay);
+var divs = WebVTT.processCues(window, cues, overlay, regions);
 ```
 
 ## ParsingError
